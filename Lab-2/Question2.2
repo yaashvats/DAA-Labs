@@ -1,0 +1,34 @@
+def select_meeting_activities(activities):
+    # Sort activities: finish_time ascending, start_time ascending, activity_id ascending
+    sorted_activities = sorted(
+        activities,
+        key=lambda x: (int(x[2]), int(x[1]), str(x[0]))
+    )
+
+    result = []
+    result.append("Activity Selection Report")
+    result.append("Selected Activities")
+    result.append("Activity Start Finish Reason")
+
+    last_finish_time = -1
+    selected_count = 0
+
+    for act_id, start_time, finish_time in sorted_activities:
+        start = int(start_time)
+        finish = int(finish_time)
+
+        # Check if activity can be selected (start_time >= last selected finish_time)
+        if start >= last_finish_time:
+            if selected_count == 0:
+                reason = "Selected first because it finishes earliest"
+            else:
+                reason = "Selected because start time is compatible"
+
+            result.append(f"{act_id} {start} {finish} {reason}")
+            last_finish_time = finish
+            selected_count += 1
+
+    result.append(f"Total Selected: {selected_count}")
+    result.append("Justification: Greedy selection by earliest finish time maximizes compatible activities")
+
+    return result
